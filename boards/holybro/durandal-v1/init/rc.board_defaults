@@ -5,3 +5,5 @@
 
 # Enable IMU thermal control
 param set-default SENS_EN_THERMAL 1
+
+param set UAVCAN_ENABLE 2
