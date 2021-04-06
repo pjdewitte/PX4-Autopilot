@@ -24,6 +24,14 @@ serial_config:
         then
             set MAV_ARGS "${MAV_ARGS} -s"
         fi
+        if param compare MAV_${i}_FLOW_CTL 0
+        then
+            set MAV_ARGS "${MAV_ARGS} -Z"
+        fi
+        if param compare MAV_${i}_FLOW_CTL 1
+        then
+            set MAV_ARGS "${MAV_ARGS} -z"
+        fi
         mavlink start ${MAV_ARGS} -x
       port_config_param:
         name: MAV_${i}_CONFIG
@@ -111,6 +119,24 @@ parameters:
             reboot_required: true
             num_instances: *max_num_config_instances
             default: [true, true, true]
+
+        MAV_${i}_FLOW_CTL:
+            description:
+                short: Configure flow control on instance ${i}
+                long: |
+                    Configure whether hardware flow control should be off, on or automatic.
+
+                    In Automatic mode, it is turned on until the buffer gets too full and
+                    writing is failing.
+
+            type: enum
+            values:
+                0: Off (always disable)
+                1: On (enable whenever possible)
+                2: Automatic (enable, but disable if this appears problematic)
+            reboot_required: true
+            num_instances: *max_num_config_instances
+            default: [2, 2, 2]
 
         MAV_${i}_UDP_PRT:
             description:
